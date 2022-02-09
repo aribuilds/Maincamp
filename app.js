@@ -8,9 +8,8 @@ const ExpressError = require('./utils/ExpressError');
 const methodOverride = require('method-override');
 
 
-const Campground = require('./models/campground');
-const Review = require('./models/review');
-
+const campgrounds = require('./routes/campgrounds');
+const reviews = require('./routes/reviews');
 
 mongoose.connect('mongodb://localhost:27017/yelp-camp')
 .then(() =>{
@@ -73,7 +72,7 @@ app.all('*', (req,res, next) => {
 app.use((err, req, res, next) => {
     const {statusCode = 500} = err;
     if (!err.message) err.message = 'Oh no, Something Went Wrong!'
-    res.status(statusCode).rendder('error', { err })
+    res.status(statusCode).render('error', { err })
 })
 
 
