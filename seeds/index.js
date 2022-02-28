@@ -15,16 +15,12 @@ mongoose.connect('mongodb://localhost:27017/yelp-camp')
 
 
 const db = mongoose.connection;
+
 db.on('error', console.error.bind(console, 'connection error'));
 db.once('open', () => {
     console.log('Database connected')
 })
 
-
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-    console.log("Database connected");
-});
 
 const sample = array => array[Math.floor(Math.random() * array.length)];
 
@@ -35,11 +31,12 @@ const seedDB = async () => {
         const random1000 = Math.floor(Math.random() * 1000);
         const price = Math.floor(Math.random() * 20) + 10
         const camp = new Campground({
+            author: '5f5c330c2cd79d538f2c66d9',
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
             image: 'https://source.unsplash.com/collection/483251', 
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum quasi doloremque impedit aut ipsum facere possimus vitae placeat voluptas voluptatem. Cumque assumenda, voluptatibus aperiam officiis placeat animi consequatur. Ipsam, soluta!' ,
-            price: price
+            price
         })
         await camp.save();
     }
