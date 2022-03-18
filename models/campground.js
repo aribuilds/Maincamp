@@ -2,31 +2,12 @@ const mongoose = require('mongoose');
 const Review = require('./review')
 const Schema = mongoose.Schema;
 
-const ImageSchema = new Schema({
-    url: String,
-    filename: String
-});
 
-ImageSchema.virtual('thumbnail').get(function () {
-    return this.url.replace('/upload', '/upload/w_200');
-});
-
-const opts = { toJSON: { virtuals: true} };
-
-const CampgroundSchema = new Schema ({
+// "https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
+  
+const CampgroundSchema = new Schema({
     title: String,
-    image: [ImageSchema],
-    geometry: {
-        type: {
-            type: String,
-            enum: ['Point'],
-            required: true
-        },
-        coordinates: {
-            type: [Number],
-            required: true
-        }
-    },
+    images: String,
     price: Number,
     description: String,
     location: String,
@@ -40,16 +21,12 @@ const CampgroundSchema = new Schema ({
             ref: 'Review'
         }
     ]
-}, opts);
-
-CampgroundSchema.virtual('properties.popUpMarkup').get(function () {
-    retrun `<strong><a href="/campground/${this._id}">${this.title}</a><strong>
-    <p>${this.description.substring(0, 20)}...</p>`
 });
 
 
+
 CampgroundSchema.post('findOneAndDelete', async function (doc) {
-    if(doc) {
+    if (doc) {
         await Review.deleteMany({
             _id: {
                 $in: doc.reviews
